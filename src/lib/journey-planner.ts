@@ -68,27 +68,36 @@ export function resolveLocation(input: string): ResolvedPoint | null {
     }
   }
 
-  // 2. Check exact Stop ID (e.g., S0123)
+  // 2. Check exact Stop ID (e.g., S0123) or formatted "Name (S0123)"
   const upper = trimmed.toUpperCase();
   if (graph.stops[upper]) {
     const s = graph.stops[upper];
     return { query: trimmed, label: s.name, lat: s.lat, lng: s.lng, matchedBy: "stop_id" };
   }
+  const trailingIdMatch = upper.match(/\((S\d{4})\)$/);
+  if (trailingIdMatch && graph.stops[trailingIdMatch[1]]) {
+    const s = graph.stops[trailingIdMatch[1]];
+    return { query: trimmed, label: s.name, lat: s.lat, lng: s.lng, matchedBy: "stop_id" };
+  }
 
-  const qLower = trimmed.toLowerCase();
+  const qLower = trimmed.replace(/\s*\(S\d{4}\)$/i, "").trim().toLowerCase();
 
-  // 3. Check landmarks (exact or substring)
+  // 3. Check landmarks (exact, substring, or reverse substring)
   const exactLm = graph.landmarks.find((l) => l.name.toLowerCase() === qLower);
   if (exactLm) {
     return { query: trimmed, label: exactLm.name, lat: exactLm.lat, lng: exactLm.lng, matchedBy: "landmark" };
   }
-  const partialLm = graph.landmarks.find((l) => l.name.toLowerCase().includes(qLower));
+  const partialLm = graph.landmarks.find(
+    (l) => l.name.toLowerCase().includes(qLower) || qLower.includes(l.name.toLowerCase())
+  );
   if (partialLm) {
     return { query: trimmed, label: partialLm.name, lat: partialLm.lat, lng: partialLm.lng, matchedBy: "landmark" };
   }
 
   // 4. Check stop names
-  const stopMatch = Object.values(graph.stops).find((s) => s.name.toLowerCase().includes(qLower));
+  const stopMatch = Object.values(graph.stops).find(
+    (s) => s.name.toLowerCase().includes(qLower) || qLower.includes(s.name.toLowerCase())
+  );
   if (stopMatch) {
     return { query: trimmed, label: stopMatch.name, lat: stopMatch.lat, lng: stopMatch.lng, matchedBy: "stop_name" };
   }
