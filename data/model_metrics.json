@@ -1,0 +1,68 @@
+{
+  "train_segments": 48682,
+  "test_segments": 12244,
+  "train_trips": 5784,
+  "test_trips": 1447,
+  "ml_model": {
+    "name": "RandomForestRegressor (32 trees, max_depth=10)",
+    "mae_min": 4.39,
+    "rmse_min": 6.91,
+    "mape_pct": 25.5,
+    "r2_duration": 0.76,
+    "mae_speed_kmh": 4.15
+  },
+  "baseline_timetable": {
+    "name": "Static Timetable (17.1 km/h constant)",
+    "mae_min": 5.82,
+    "rmse_min": 8.57,
+    "mape_pct": 34.4,
+    "r2_duration": 0.631
+  },
+  "baseline_city_hour": {
+    "name": "City-Wide Hourly Average",
+    "mae_min": 9.82,
+    "rmse_min": 13.73,
+    "mape_pct": 49.9,
+    "r2_duration": 0.053
+  },
+  "feature_names": [
+    "dist_km",
+    "straight_km",
+    "circuity",
+    "start_lat",
+    "start_lng",
+    "end_lat",
+    "end_lng",
+    "hour_sin",
+    "hour_cos",
+    "is_weekend",
+    "is_morning_peak",
+    "is_evening_peak",
+    "is_night",
+    "origin_grid_speed",
+    "dest_grid_speed",
+    "mid_grid_speed",
+    "mean_dwell_ratio",
+    "route_hour_speed"
+  ],
+  "feature_importances": [
+    0.0159,
+    0.092,
+    0.0715,
+    0.0405,
+    0.0198,
+    0.0261,
+    0.0182,
+    0.1254,
+    0.0363,
+    0.0021,
+    0.007,
+    0.0012,
+    0.0262,
+    0.0602,
+    0.0791,
+    0.2249,
+    0.1345,
+    0.019
+  ]
+}
